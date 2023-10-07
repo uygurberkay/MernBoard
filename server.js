@@ -9,7 +9,10 @@ const port = process.env.PORT || 5100;
 import mongoose from 'mongoose';
 
 
+
 import jobRouter from './routes/jobRouter.js';
+import authRouter from './routes/authRouter.js';
+import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -20,6 +23,7 @@ app.use(express.json()) // Accepts json format
 
 /* ROUTES */
 app.use('/api/v1/jobs', jobRouter);
+app.use('/api/v1/auth', authRouter)
 
 
 // NOT FOUND MIDDLEWARE
@@ -27,10 +31,7 @@ app.use('*', (req, res) => {
     res.status(404).json({ message: 'not found' });
 });
 // ERROR MIDDLEWARE // must be at the bottom to work
-app.use((err, req, res, next) => {
-    console.log(err);
-    res.status(500).json({ message : 'something went wrong' });
-});
+app.use(errorHandlerMiddleware)
 
 /* MONGODB CONNECTION */
 try {
