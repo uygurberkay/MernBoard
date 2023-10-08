@@ -9,8 +9,9 @@
   "scripts": {
     "setup-project-yarn": "yarn install && cd client && yarn install",
     "setup-project-npm": "npm i && cd client && npm i",
-    "dev": "nodemon server.js",
-    "watch": "node --watch server.js"
+    "server": "nodemon server",
+    "client": "cd client && yarn dev",
+    "dev": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\""
   },
   "dependencies": {
     "bcryptjs": "2.4.3",

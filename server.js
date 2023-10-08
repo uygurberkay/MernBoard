@@ -21,6 +21,12 @@ import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev')); // Show us request in detailed. (on development stage)
 }
+
+// Test route
+app.get('/api/v1/test', (req,res) => {
+    res.json({msg : 'test route'})
+})
+
 /* MIDDLEWARES */
 app.use(cookieParser()) //
 app.use(express.json()) // Accepts json format
