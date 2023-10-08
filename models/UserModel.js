@@ -19,4 +19,12 @@ const UserSchema = new mongoose.Schema({
     },
 });
 
+/* Mongoose Methods */
+// Helps password to doesn't show to user
+UserSchema.methods.toJSON = function() {
+    let obj = this.toObject() // Convert to the Object
+    delete obj.password;
+    return obj;
+}
+
 export default mongoose.model('User', UserSchema);
