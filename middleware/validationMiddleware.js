@@ -1,5 +1,5 @@
 import { body, param, validationResult } from 'express-validator';
-import { BadRequestError, NotFoundError } from '../errors/customErrors.js';
+import { BadRequestError, NotFoundError, UnauthorizedError } from '../errors/customErrors.js';
 import { JOB_STATUS, JOB_TYPE } from '../utils/constant.js';
 import mongoose from 'mongoose';
 import Job from '../models/JobModel.js';
@@ -15,6 +15,9 @@ const withValidationErrors = (validateValues) => {
             console.log(errorMessages)
             if (errorMessages[0].startsWith('Invalid')) {
                 throw new NotFoundError(errorMessages);
+            }
+            if (errorMessages[0].startsWith('not authorized')) {
+                throw new UnauthorizedError('not authorized to access this route');
             }
             throw new BadRequestError(errorMessages);
             }
@@ -37,13 +40,17 @@ export const validateJobInput = withValidationErrors ([
 
 export const validateIdParam = withValidationErrors([
     param('id')
-        .custom(async (value) =>{
-            const isValidId = mongoose.Types.ObjectId.isValid(value)
-            if(!isValidId) throw new BadRequestError('Invalid MongoDB ID')
+        .custom(async (value, {req}) =>{
+            const isValidMongoId = mongoose.Types.ObjectId.isValid(value)
+            if(!isValidMongoId) throw new BadRequestError('Invalid MongoDB ID')
             const job = await Job.findById(value);
+            if (!job) throw new NotFoundError(`There is no ID : ${value}`);
+            const isAdmin = req.user.role === 'admin';
+            const isOwner = req.user.userId === job.createdBy.toString();
+            // If we change this && to || admin rule over all jobs (edit, create, etc..)
+            if (!isAdmin && !isOwner) throw new UnauthorizedError('not authorized to access this route');
 
-    if (!job) throw new NotFoundError(`There is no ID : ${value}`);
-        }).withMessage('Invalid MongoDB ID')
+        })
 ])
 
 export const validateRegisterInput = withValidationErrors([
@@ -64,4 +71,14 @@ export const validateRegisterInput = withValidationErrors([
             .isLength({ min: 8}).withMessage('Password must be at least 8 characters long'),
         body('location').notEmpty().withMessage('Location is required'),
         body('lastName').notEmpty().withMessage('LastName is required')
+])
+
+
+export const validateLoginInput = withValidationErrors([
+    // body names must be match with database names
+    body('email')
+        .notEmpty().withMessage('Email is required')
+        .isEmail().withMessage('Invalid email format'),
+    body('password')
+        .notEmpty().withMessage('Password is required')
 ])

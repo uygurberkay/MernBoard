@@ -7,11 +7,13 @@ const app = express();
 import morgan from 'morgan';
 const port = process.env.PORT || 5100;
 import mongoose from 'mongoose';
+import cookieParser from 'cookie-parser';
 
-
-
+// routes
 import jobRouter from './routes/jobRouter.js';
 import authRouter from './routes/authRouter.js';
+// middlewares
+import { authenticateUser } from './middleware/authMiddleware.js';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
 
 
@@ -19,11 +21,12 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev')); // Show us request in detailed. (on development stage)
 }
 /* MIDDLEWARES */
+app.use(cookieParser()) //
 app.use(express.json()) // Accepts json format
 
 /* ROUTES */
-app.use('/api/v1/jobs', jobRouter);
-app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/jobs', authenticateUser, jobRouter);
+app.use('/api/v1/auth',  authRouter)
 
 
 // NOT FOUND MIDDLEWARE
