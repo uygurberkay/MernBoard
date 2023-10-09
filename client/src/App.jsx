@@ -15,6 +15,7 @@ import {
 
 import {action as registerAction} from './pages/Register';
 import {action as loginAction} from './pages/Login';
+import {loader as dashboardLoader} from './pages/DashboardLayout';
 
 /* Dark-theme setter and give to the Dashboard via props */
 export const checkDefaultTheme = () => {
@@ -48,6 +49,7 @@ const router = createBrowserRouter([
       {
         path: 'dashboard',
         element: <DashboardLayout />,
+        loader: dashboardLoader,
         children:[
           {
             index: true, // Makes Default main page of that Hierarchy

@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-const FormRow = ({ type, name, labelText, placeholder, }) => {
+const FormRow = ({ type, name, labelText, placeholder }) => {
     return (
         <div className="form-row">
                     <label htmlFor={name} className="form-label">

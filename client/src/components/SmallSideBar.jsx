@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 
 const SmallSideBar = () => {
     const { showSidebar, toggleSidebar } =  useDashboardContext()
-    console.log(showSidebar , toggleSidebar)
+    // console.log(showSidebar , toggleSidebar)
     return (
         <Wrapper>
             <div className={showSidebar ? 'sidebar-container show-sidebar': 'sidebar-container'}>
