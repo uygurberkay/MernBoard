@@ -5,5 +5,7 @@ export { default as NavLinks } from './NavLinks.jsx';
 export { default as BigSideBar } from './BigSideBar';
 export { default as ThemeToggle } from './ThemeToggle.jsx';
 export { default as SmallSideBar } from './SmallSideBar.jsx';
-export { default as LogoutContainer } from './LogoutContainer.jsx';
+export { default as JobsContainer } from './JobsContainer.jsx'
 export { default as FormRowSelect } from './FormRowSelect.jsx'
+export { default as SearchContainer } from './SearchContainer.jsx'
+export { default as LogoutContainer } from './LogoutContainer.jsx';
