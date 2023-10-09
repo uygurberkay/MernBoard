@@ -15,6 +15,7 @@ import {
 
 import {action as registerAction} from './pages/Register';
 import {action as loginAction} from './pages/Login';
+import {action as addJobAction} from './pages/AddJob'
 import {loader as dashboardLoader} from './pages/DashboardLayout';
 
 /* Dark-theme setter and give to the Dashboard via props */
@@ -53,7 +54,8 @@ const router = createBrowserRouter([
         children:[
           {
             index: true, // Makes Default main page of that Hierarchy
-            element: <AddJob />
+            element: <AddJob />,
+            action: addJobAction,
           },
           {
             path: 'stats',
