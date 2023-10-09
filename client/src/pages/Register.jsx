@@ -1,27 +1,47 @@
-import { Link } from "react-router-dom"
+import { Form, redirect, useNavigation, Link } from 'react-router-dom';
 import Wrapper from '../assets/wrappers/RegisterAndLoginPage';
-import Logo from "../components/Logo";
-import FormRow from "../components/FormRow";
+import { 
+    Logo, 
+    FormRow 
+} from '../components'
+import customFetch from './../utils/customFetch';
+import { toast } from 'react-toastify';
+
+export const action = async ({ request }) => {
+    const formData = await request.formData();
+    const data = Object.fromEntries(formData) // Turns into an object
+    try {
+        await customFetch.post('/auth/register', data)
+        toast.success('Registration successfull')
+        return redirect('/login');
+    } catch (error) {
+        toast.error(error?.response?.data?.msg)
+        return error
+    }
+}
 
 const Register = () => {
+    const navigation = useNavigation()
+    console.log(navigation)
+    const isSubmitting = navigation.state === 'submitting';
     return (
         <Wrapper>
-            <form action="" className="form">
+            <Form method='post'  className="form"> {/* Default method will be 'GET' */}
                 <Logo />
                 <h4>Register</h4>
                 <FormRow 
                     type={'text'} 
                     name={'name'} 
-                    placeholder={'Berkay'} />
+                    placeholder={'Name'} />
                 <FormRow 
                     type={'text'} 
-                    name={'LastName'} 
-                    placeholder={'Uygur'} 
+                    name={'lastName'} 
+                    placeholder={'Surname'} 
                     labelText={'last name'} />
                 <FormRow 
                     type={'text'} 
                     name={'location'} 
-                    placeholder={'İzmir'} />
+                    placeholder={'City'} />
                 <FormRow 
                     type={'email'} 
                     name={'email'} 
@@ -29,10 +49,10 @@ const Register = () => {
                 <FormRow 
                     type={'password'} 
                     name={'password'} 
-                    placeholder={'Example123'} />
+                    placeholder={'Password'} />
 
-                    <button type="submit" className="btn btn-block">
-                        Submit
+                    <button type="submit" className="btn btn-block" disabled={isSubmitting}>
+                        {isSubmitting ? 'submitting...' : 'submit'}
                     </button>
                     <p>
                         Already a member?
@@ -40,7 +60,7 @@ const Register = () => {
                             Login here
                         </Link>
                     </p>
-            </form>
+            </Form>
         </Wrapper>
     )
 }
