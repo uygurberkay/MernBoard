@@ -1,6 +1,7 @@
 import Job from '../models/JobModel.js';
 import { StatusCodes } from 'http-status-codes';
 import mongoose from 'mongoose';
+import day from 'dayjs';
 
 
 // Refactored to the Mongodb
@@ -38,11 +39,13 @@ export const deleteJob = async (req, res) => {
 };
 
 export const showStats =  async (req,res) => {
+    /* To aggregate stats count */
     let stats = await Job.aggregate([
         { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } },
         { $group: { _id: '$jobStatus', count: { $sum: 1 } } },
     ]);
 
+    /* Turn into stats objets to an array */
     stats = stats.reduce((acc,curr) => {
         const {_id:title, count} = curr;
         acc[title] = count;
@@ -54,19 +57,33 @@ export const showStats =  async (req,res) => {
         interview: stats.interview || 0,
         declined: stats.declined || 0,
     };
-    let monthlyApplications = [
+
+    let monthlyApplications = await Job.aggregate([
+        { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } }, // Take by userId
         {
-            date: 'May 23',
-            count: 12,
-        },
-        {
-            date: 'Jun 23',
-            count: 9,
-        },
-        {
-            date: 'Jul 23',
-            count: 3,
-        },
-    ];
+            $group: {
+                _id: { year: { $year: '$createdAt' }, month: { $month: '$createdAt' } },
+                count: { $sum: 1 },
+            },
+        }, // Group by year/month and count size
+        { $sort: { '_id.year': -1, '_id.month': -1 } }, // Sort desc
+        { $limit: 6 }, // Limits to 6 index
+    ])
+
+    /* Turn into montlyApplication objets to an array */
+    monthlyApplications = monthlyApplications
+        .map((item) => {
+            const { _id: { year, month }, count } = item;
+
+            // const date = day().month(month - 1).year(year).format('MMM YY');
+
+            const date = day()
+        .month(month - 1)
+        .year(year)
+        .format('MMM YY');
+            return {date, count}
+        })
+        .reverse()
+
     res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications })
 }
