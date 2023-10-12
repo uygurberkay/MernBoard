@@ -15,6 +15,7 @@ import {
 } from './pages';
 
 import {action as loginAction} from './pages/Login';
+import {action as profileAction} from './pages/Profile';
 import {action as addJobAction} from './pages/AddJob'
 import {action as editJobAction} from './pages/EditJob'
 import {action as registerAction} from './pages/Register';
@@ -74,7 +75,8 @@ const router = createBrowserRouter([
           },
           {
             path: 'profile',
-            element: <Profile />
+            element: <Profile />,
+            action: profileAction,
           },
           {
             path: 'admin',

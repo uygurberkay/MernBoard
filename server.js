@@ -13,9 +13,18 @@ import cookieParser from 'cookie-parser';
 import jobRouter from './routes/jobRouter.js';
 import authRouter from './routes/authRouter.js';
 import userRouter from './routes/userRouter.js'
+
+// public
+import { dirname } from 'path';
+import { fileURLToPath } from 'url';
+import path from 'path';
+
+
 // middlewares
 import { authenticateUser } from './middleware/authMiddleware.js';
 import errorHandlerMiddleware from './middleware/errorHandlerMiddleware.js';
+
+const __dirname = dirname(fileURLToPath(import.meta.url));
 
 
 if (process.env.NODE_ENV === 'development') {
@@ -28,6 +37,7 @@ app.get('/api/v1/test', (req,res) => {
 })
 
 /* MIDDLEWARES */
+app.use(express.static(path.resolve(__dirname, './public')));
 app.use(cookieParser()) //
 app.use(express.json()) // Accepts json format
 
