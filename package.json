@@ -2,6 +2,9 @@
   "name": "MernProject",
   "version": "1.0.0",
   "main": "index.js",
+  "engines": {
+    "node": ">=14.20.1"
+  },
   "type": "module",
   "repository": "https://github.com/uygurberkay/MernBoard.git",
   "author": "uygurberkay <50241715+uygurberkay@users.noreply.github.com>",
