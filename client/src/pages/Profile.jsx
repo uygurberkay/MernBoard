@@ -7,7 +7,7 @@ import { toast } from 'react-toastify';
 
 export const action = async ({request}) => {
     const formData = await request.formData();
-    console.log(formData)
+    // console.log(formData)
     const file = formData.get('avatar')
     if (file && file.size > 500000) {
         toast.error('Image size too large');
