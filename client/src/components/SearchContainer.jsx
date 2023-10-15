@@ -8,7 +8,6 @@ import { useAllJobsContext } from '../pages/AllJobs';
 const SearchContainer = () => {
     const { searchValues } = useAllJobsContext();
     const { search, jobStatus, jobType, sort } = searchValues;
-    console.log(searchValues)
     const debounce = (onChange) => {
         let timeout
         return (e) => {
